@@ -16,9 +16,39 @@
             </div>
         @endif
 
-        @if($product->image)
+        @if($product->images && is_array($product->images) && count($product->images) > 0)
             <div class="mb-6">
-                <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-full h-64 object-cover rounded-xl shadow-sm border border-gray-100">
+                <!-- Main Image -->
+                <div class="mb-4 rounded-xl overflow-hidden shadow-sm border border-gray-200 bg-gray-100">
+                    <img id="mainImage" src="{{ asset('storage/' . $product->images[0]) }}" alt="{{ $product->name }}" class="w-full h-80 sm:h-96 object-contain">
+                </div>
+                <!-- Thumbnails -->
+                <div class="flex overflow-x-auto gap-3 pb-2 snap-x">
+                    @foreach($product->images as $index => $img)
+                        <img src="{{ asset('storage/' . $img) }}" alt="{{ $product->name }}" 
+                             class="w-20 h-20 sm:w-24 sm:h-24 object-cover rounded-lg cursor-pointer border-2 hover:border-blue-500 transition-all snap-center flex-shrink-0 opacity-70 hover:opacity-100 {{ $index === 0 ? 'border-blue-500 opacity-100' : 'border-transparent' }}"
+                             onclick="changeImage(this, '{{ asset('storage/' . $img) }}')">
+                    @endforeach
+                </div>
+            </div>
+
+            <script>
+                function changeImage(element, src) {
+                    document.getElementById('mainImage').src = src;
+                    // Reset all thumbnails
+                    let siblings = element.parentNode.children;
+                    for(let i=0; i<siblings.length; i++){
+                        siblings[i].classList.remove('border-blue-500', 'opacity-100');
+                        siblings[i].classList.add('border-transparent', 'opacity-70');
+                    }
+                    // Set active thumbnail
+                    element.classList.remove('border-transparent', 'opacity-70');
+                    element.classList.add('border-blue-500', 'opacity-100');
+                }
+            </script>
+        @elseif($product->image)
+            <div class="mb-6">
+                <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-full h-80 sm:h-96 object-contain rounded-xl shadow-sm border border-gray-200 bg-gray-100">
             </div>
         @endif
 

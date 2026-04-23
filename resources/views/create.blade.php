@@ -22,8 +22,9 @@
         <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
             @csrf
             <div>
-                <label class="block font-medium mb-1">Gambar Produk</label>
-                <input type="file" name="image" class="w-full border rounded-lg p-2 outline-blue-500 bg-gray-50" accept="image/*">
+                <label class="block font-medium mb-1">Gambar Produk (Pilih beberapa file sekaligus)</label>
+                <input type="file" name="images[]" multiple class="w-full border rounded-lg p-2 outline-blue-500 bg-gray-50" accept="image/*">
+                <p class="text-xs text-gray-500 mt-1">Tips: Tahan tombol Ctrl (atau Shift) saat memilih untuk upload banyak gambar sekaligus.</p>
             </div>
             <div>
                 <label class="block font-medium mb-1">Nama Produk</label>

@@ -23,16 +23,37 @@
             @csrf
             @method('PUT')
             
-            @if($product->image)
+            @if($product->images && is_array($product->images) && count($product->images) > 0)
                 <div class="mb-4">
-                    <label class="block font-medium mb-1 line-through text-gray-400">Gambar Saat Ini:</label>
+                    <label class="block font-medium mb-2 text-gray-700">Gambar Saat Ini:</label>
+                    <p class="text-xs text-gray-500 mb-2">Pilih "Utama" untuk menjadikan foto sebagai gambar utama (Carousel). Centang "Hapus" untuk membuang foto.</p>
+                    <div class="flex gap-4 overflow-x-auto pb-2">
+                        @foreach($product->images as $img)
+                            <div class="flex-shrink-0 flex flex-col items-center group relative">
+                                <img src="{{ asset('storage/' . $img) }}" alt="{{ $product->name }}" class="w-24 h-24 object-cover rounded-lg shadow-sm border mb-2 {{ $loop->first ? 'border-2 border-blue-500' : '' }}">
+                                <div class="flex gap-2">
+                                    <label class="text-xs text-blue-600 flex items-center gap-1 cursor-pointer bg-blue-50 px-2 py-1 rounded border border-blue-200 hover:bg-blue-100 transition">
+                                        <input type="radio" name="main_image" value="{{ $img }}" {{ $loop->first ? 'checked' : '' }}> Utama
+                                    </label>
+                                    <label class="text-xs text-red-600 flex items-center gap-1 cursor-pointer bg-red-50 px-2 py-1 rounded border border-red-200 hover:bg-red-100 transition">
+                                        <input type="checkbox" name="delete_images[]" value="{{ $img }}"> Hapus
+                                    </label>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @elseif($product->image)
+                <div class="mb-4">
+                    <label class="block font-medium mb-1 text-gray-700">Gambar Saat Ini:</label>
                     <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-32 h-32 object-cover rounded-lg shadow-sm border">
                 </div>
             @endif
 
             <div>
-                <label class="block font-medium mb-1">Ganti Gambar (Opsional)</label>
-                <input type="file" name="image" class="w-full border rounded-lg p-2 outline-blue-500 bg-gray-50" accept="image/*">
+                <label class="block font-medium mb-1">Tambah Gambar Baru (Pilih beberapa file sekaligus)</label>
+                <input type="file" name="images[]" multiple class="w-full border rounded-lg p-2 outline-blue-500 bg-gray-50" accept="image/*">
+                <p class="text-xs text-gray-500 mt-1">Tips: Tahan tombol Ctrl (atau Shift) saat memilih untuk upload banyak gambar sekaligus.</p>
             </div>
             <div>
                 <label class="block font-medium mb-1">Nama Produk</label>

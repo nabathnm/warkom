@@ -111,7 +111,9 @@
                 <div class="group flex flex-col">
                     <!-- Image Area -->
                     <div class="bg-gray-200 aspect-[4/3] w-full rounded-md flex flex-col items-center justify-center mb-4 relative overflow-hidden">
-                        @if($product->image)
+                        @if($product->images && is_array($product->images) && count($product->images) > 0)
+                            <img src="{{ asset('storage/' . $product->images[0]) }}" alt="{{ $product->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                        @elseif($product->image)
                             <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                         @else
                             <i class="fa-regular fa-image text-gray-400 text-4xl mb-2"></i>

@@ -32,12 +32,23 @@ class ProductController extends Controller
             'description' => 'required',
             'price' => 'required|numeric',
             'stock' => 'required|integer',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'images' => 'nullable|array',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
         $data = $request->all();
+        
+        // Handle single image fallback (optional, but let's keep it if we still want it or just use images)
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('products', 'public');
+        }
+
+        if ($request->hasFile('images')) {
+            $images = [];
+            foreach ($request->file('images') as $file) {
+                $images[] = $file->store('products', 'public');
+            }
+            $data['images'] = $images;
         }
 
         Product::create($data);
@@ -84,16 +95,50 @@ class ProductController extends Controller
             'description' => 'required',
             'price' => 'required|numeric',
             'stock' => 'required|integer',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'images' => 'nullable|array',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
         $data = $request->all();
+
+        // Fallback for single image delete/update
         if ($request->hasFile('image')) {
             if ($product->image) {
                 Storage::disk('public')->delete($product->image);
             }
             $data['image'] = $request->file('image')->store('products', 'public');
         }
+
+        $existingImages = is_array($product->images) ? $product->images : [];
+
+        // Hapus gambar yang dicentang
+        if ($request->has('delete_images')) {
+            foreach ($request->delete_images as $delImg) {
+                if (($key = array_search($delImg, $existingImages)) !== false) {
+                    Storage::disk('public')->delete($delImg);
+                    unset($existingImages[$key]);
+                }
+            }
+            $existingImages = array_values($existingImages); // Reindex array
+        }
+
+        // Tambahkan gambar baru (append)
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $file) {
+                $existingImages[] = $file->store('products', 'public');
+            }
+        }
+
+        // Jadikan gambar utama (pindah ke index 0)
+        if ($request->has('main_image')) {
+            $mainImg = $request->input('main_image');
+            if (($key = array_search($mainImg, $existingImages)) !== false) {
+                unset($existingImages[$key]);
+                array_unshift($existingImages, $mainImg);
+            }
+        }
+        
+        $data['images'] = array_values($existingImages);
 
         $product->update($data);
         return redirect()->route('products.index')->with('success', 'Produk berhasil diupdate!');
@@ -105,6 +150,12 @@ class ProductController extends Controller
 
         if ($product->image) {
             Storage::disk('public')->delete($product->image);
+        }
+
+        if ($product->images && is_array($product->images)) {
+            foreach ($product->images as $img) {
+                Storage::disk('public')->delete($img);
+            }
         }
 
         $product->delete();

@@ -52,7 +52,23 @@ class ProductSeeder extends Seeder
             ['name' => 'Keychron K8 Wireless Mechanical Keyboard', 'description' => 'Keyboard mekanikal untuk kerja dan gaming.', 'category' => 'aksesoris', 'price' => 1600000, 'stock' => 9],
         ];
 
+        $imageMap = [
+            'aksesoris' => 'products/aksesoris_mockup_1776924788244.png',
+            'casing' => 'products/casing_mockup_1776924760034.png',
+            'cooling' => 'products/cooling_mockup_1776924773988.png',
+            'cpu' => 'products/cpu_mockup_1776924837593.png',
+            'motherboard' => 'products/motherboard_mockup_1776924680968.png',
+            'psu' => 'products/psu_mockup_1776924745047.png',
+            'ram' => 'products/ram_mockup_1776924714779.png',
+            'storage' => 'products/storage_mockup_1776924730300.png',
+            'vga' => 'products/vga_mockup_1776924699579.png'
+        ];
+
         foreach ($products as $product) {
+            if (isset($imageMap[$product['category']])) {
+                // Menambahkan gambar dalam bentuk array (mendukung banyak gambar)
+                $product['images'] = [$imageMap[$product['category']]];
+            }
             Product::create($product);
         }
     }
