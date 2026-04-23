@@ -20,7 +20,7 @@ Ikuti langkah-langkah di bawah ini untuk mengatur dan menjalankan aplikasi Warko
 Buka terminal atau command prompt Anda, lalu jalankan perintah berikut untuk mendownload kode (clone):
 
 ```bash
-git clone <url-repository-anda>
+git clone (https://github.com/nabathnm/warkom)
 cd warkom
 ```
 *(Catatan: Ganti `<url-repository-anda>` dengan URL dari repository Git Anda jika sudah diunggah).*
