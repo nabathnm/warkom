@@ -1,59 +1,106 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Warkom - Aplikasi Toko Komputer
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Warkom adalah sebuah aplikasi e-commerce toko komputer berbasis web yang dibangun menggunakan framework Laravel. Aplikasi ini menyediakan fitur bagi pengguna (user) untuk melihat produk, melakukan pemesanan, memberikan komentar (review), dan admin untuk mengelola data produk.
 
-## About Laravel
+## Persyaratan Sistem
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Pastikan sistem Anda telah memenuhi persyaratan berikut sebelum menjalankan aplikasi:
+- PHP >= 8.1
+- Composer
+- Node.js & NPM
+- MySQL / MariaDB
+- Git
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Instalasi dan Menjalankan Aplikasi
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Ikuti langkah-langkah di bawah ini untuk mengatur dan menjalankan aplikasi Warkom di mesin lokal Anda:
 
-## Learning Laravel
+### 1. Clone Repository
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+Buka terminal atau command prompt Anda, lalu jalankan perintah berikut untuk mendownload kode (clone):
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```bash
+git clone <url-repository-anda>
+cd warkom
+```
+*(Catatan: Ganti `<url-repository-anda>` dengan URL dari repository Git Anda jika sudah diunggah).*
 
-## Laravel Sponsors
+### 2. Install Dependensi PHP (Composer)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Instal semua paket PHP yang dibutuhkan oleh Laravel menggunakan composer:
 
-### Premium Partners
+```bash
+composer install
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### 3. Install Dependensi Frontend (NPM)
 
-## Contributing
+Instal library frontend dan jalankan kompilasi asset (menggunakan Vite):
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+npm install
+npm run build
+```
 
-## Code of Conduct
+### 4. Konfigurasi Environment (File `.env`)
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Buat file konfigurasi environment dengan cara menyalin dari file contoh yang sudah ada:
 
-## Security Vulnerabilities
+```bash
+cp .env.example .env
+```
+*(Jika Anda menggunakan Command Prompt Windows biasa, gunakan: `copy .env.example .env`)*
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Buka file `.env` menggunakan teks editor Anda dan atur konfigurasi database. Pastikan Anda telah membuat database kosong di MySQL Anda (misalnya dengan nama `warkom_db`):
 
-## License
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=warkom_db
+DB_USERNAME=root
+DB_PASSWORD=
+```
+*(Sesuaikan DB_DATABASE, DB_USERNAME, dan DB_PASSWORD dengan pengaturan MySQL Anda)*
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### 5. Generate Application Key
+
+Jalankan perintah ini untuk membuat kunci keamanan aplikasi (APP_KEY):
+
+```bash
+php artisan key:generate
+```
+
+### 6. Migrasi dan Seeding Database
+
+Jalankan perintah migrasi untuk membuat tabel di database, sekaligus mengisi data awal (dummy products, users, admin, dan reviews) ke dalam database menggunakan seeder:
+
+```bash
+php artisan migrate:fresh --seed
+```
+
+### 7. Menjalankan Server Lokal
+
+Terakhir, jalankan development server bawaan Laravel:
+
+```bash
+php artisan serve
+```
+
+Aplikasi sekarang dapat diakses melalui browser kesayangan Anda pada alamat: `http://localhost:8000` atau `http://127.0.0.1:8000`
+
+---
+
+## Akun Demo / Test Akun
+
+Setelah Anda menjalankan perintah seeding di langkah nomor 6, sistem otomatis membuatkan akun demo berikut yang bisa Anda gunakan untuk login:
+
+### Akun Admin
+- **Email:** `admin1@gmail.com`
+- **Password:** `123456`
+- **Role:** Mengelola produk
+
+### Akun User Biasa
+- **Email:** `andi@gmail.com`
+- **Password:** `123456`
+- **Role:** Melihat produk, belanja, dan memberikan review/komentar.
