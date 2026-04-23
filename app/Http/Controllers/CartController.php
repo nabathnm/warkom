@@ -19,6 +19,10 @@ class CartController extends Controller
     {
         abort_if(Auth::user()->role === 'admin', 403, 'Admin tidak perlu fitur keranjang.');
 
+        if ($product->stock <= 0) {
+            return redirect()->back()->with('error', 'Mohon maaf, stok produk sedang habis.');
+        }
+
         $cart = Cart::where('user_id', Auth::id())
                     ->where('product_id', $product->id)
                     ->first();

@@ -30,6 +30,21 @@
                 <input type="text" name="name" class="w-full border rounded-lg p-2 outline-blue-500" required>
             </div>
             <div>
+                <label class="block font-medium mb-1">Kategori</label>
+                <select name="category" class="w-full border rounded-lg p-2 outline-blue-500 bg-white" required>
+                    <option value="" disabled selected>Pilih Kategori...</option>
+                    <option value="cpu">CPU / Prosesor</option>
+                    <option value="motherboard">Motherboard</option>
+                    <option value="vga">VGA / Kartu Grafis</option>
+                    <option value="ram">RAM / Memori</option>
+                    <option value="storage">Penyimpanan (HDD/SSD)</option>
+                    <option value="psu">Power Supply (PSU)</option>
+                    <option value="casing">Casing</option>
+                    <option value="cooling">Pendingin / Cooling</option>
+                    <option value="aksesoris">Aksesoris</option>
+                </select>
+            </div>
+            <div>
                 <label class="block font-medium mb-1">Deskripsi</label>
                 <textarea name="description" class="w-full border rounded-lg p-2 outline-blue-500" rows="3" required></textarea>
             </div>

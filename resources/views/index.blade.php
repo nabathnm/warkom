@@ -4,91 +4,160 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
-    <title>Daftar Produk Warkom</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Warkom - Home</title>
 </head>
-<body class="bg-gray-50 p-6 md:p-10 text-gray-800">
-    <div class="max-w-7xl mx-auto">
-        <!-- Header -->
-        <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4 bg-white p-6 rounded-xl shadow-sm">
-            <h1 class="text-2xl font-bold border-b-2 border-blue-600 pb-1">Katalog Produk</h1>
-            
-            <!-- Search & Actions -->
-            <div class="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
-                <form action="{{ route('products.index') }}" method="GET" class="w-full sm:w-auto relative">
-                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama atau rincian..." class="w-full sm:w-64 border rounded-lg pl-3 pr-10 py-2 outline-blue-500 bg-gray-50 focus:bg-white transition text-sm">
-                    <button type="submit" class="absolute right-2 top-2 text-gray-500 hover:text-blue-600">🔍</button>
-                </form>
+<body class="bg-white text-gray-800 font-sans">
+    
+    <!-- Header -->
+    <header class="bg-white border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20 gap-4">
+                
+                <!-- Logo -->
+                <div class="flex items-center gap-3 flex-shrink-0">
+                    <div class="bg-gray-800 text-white p-2 rounded-lg flex items-center justify-center h-10 w-10">
+                        <i class="fa-solid fa-arrow-down font-bold text-xl"></i>
+                    </div>
+                    <span class="font-bold text-2xl tracking-tight text-gray-900">WARKOM</span>
+                </div>
 
-                <div class="flex gap-2">
-                    @if(auth()->check() && auth()->user()->role === 'user')
-                        <a href="{{ route('cart.index') }}" class="bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-900 transition text-sm font-medium shadow-sm flex items-center">🛒 Keranjang</a>
-                    @endif
-                    @if(auth()->check() && auth()->user()->role === 'admin')
-                        <a href="{{ route('products.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm font-medium whitespace-nowrap shadow-sm">+ Tambah</a>
-                    @endif
-                    <form action="{{ route('logout') }}" method="POST">
-                        @csrf
-                        <button type="submit" class="bg-red-50 text-red-600 border border-red-100 px-4 py-2 rounded-lg hover:bg-red-100 transition text-sm font-medium shadow-sm">Logout</button>
+                <!-- Search Bar -->
+                <div class="flex-1 max-w-2xl px-4 hidden md:block">
+                    <form action="{{ route('products.index') }}" method="GET" class="relative w-full">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <i class="fa-solid fa-magnifying-glass text-gray-500"></i>
+                        </div>
+                        <input type="text" name="search" value="{{ request('search') }}" 
+                               class="block w-full pl-12 pr-4 py-2.5 bg-gray-100 border-transparent rounded-full text-sm placeholder-gray-500 focus:border-green-500 focus:bg-white focus:ring-2 focus:ring-green-200 transition-all outline-none" 
+                               placeholder="Cari produk...">
                     </form>
                 </div>
+
+                <!-- Icons & Auth -->
+                <div class="flex items-center gap-6">
+                    <div class="flex items-center gap-4 text-gray-700 text-xl">
+                        @if(auth()->check() && auth()->user()->role === 'user')
+                            <a href="{{ route('orders.index') }}" class="hover:text-green-600 transition" title="Riwayat Pesanan">
+                                <i class="fa-solid fa-list-ul"></i>
+                            </a>
+                            <a href="{{ route('cart.index') }}" class="hover:text-green-600 transition" title="Keranjang">
+                                <i class="fa-solid fa-cart-shopping"></i>
+                            </a>
+                        @endif
+                        @if(auth()->check() && auth()->user()->role === 'admin')
+                            <a href="{{ route('products.create') }}" class="hover:text-green-600 transition" title="Tambah Produk">
+                                <i class="fa-solid fa-plus-square"></i>
+                            </a>
+                        @endif
+                    </div>
+                    
+                    <div class="flex items-center gap-3">
+                        @if(auth()->check())
+                            <span class="text-sm font-medium text-gray-700 hidden sm:block">{{ auth()->user()->name }}</span>
+                            <form action="{{ route('logout') }}" method="POST" class="inline">
+                                @csrf
+                                <button type="submit" class="text-sm text-red-600 hover:text-red-800 font-medium ml-2">Logout</button>
+                            </form>
+                            <i class="fa-solid fa-circle-user text-2xl text-gray-700"></i>
+                        @else
+                            <a href="{{ route('login') }}" class="text-sm font-medium text-gray-700 hover:text-green-600 transition">Login / Sign up</a>
+                            <i class="fa-solid fa-circle-user text-2xl text-gray-700"></i>
+                        @endif
+                    </div>
+                </div>
+                
             </div>
         </div>
+    </header>
 
+    <!-- Sub Navigation -->
+    <nav class="bg-gray-200 border-b border-gray-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex h-10 items-center">
+                <a href="{{ route('products.index') }}" class="text-sm font-medium text-gray-800 hover:text-green-700 transition">Home</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="bg-gray-300 w-full h-[400px] flex flex-col justify-center items-center relative mb-12">
+        <h1 class="text-6xl md:text-8xl font-bold tracking-widest text-black mb-8">BEST PRODUK</h1>
+        <div class="absolute bottom-6 flex gap-2">
+            <div class="w-3 h-3 rounded-full bg-black"></div>
+            <div class="w-3 h-3 rounded-full bg-black"></div>
+            <div class="w-3 h-3 rounded-full bg-black"></div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+        
         @if(session('success'))
-            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg mb-6 shadow-sm">{{ session('success') }}</div>
+            <div class="bg-green-50 border-l-4 border-green-500 text-green-700 p-4 mb-8" role="alert">
+                <p>{{ session('success') }}</p>
+            </div>
         @endif
 
         @if(request('search') && $products->isEmpty())
-            <div class="bg-yellow-50 text-yellow-700 p-6 rounded-xl border border-yellow-200 text-center shadow-sm">
+            <div class="bg-yellow-50 text-yellow-700 p-6 rounded border border-yellow-200 text-center mb-8">
                 Tidak ada produk yang cocok dengan pencarian "<b>{{ request('search') }}</b>".
             </div>
         @endif
 
-        <!-- Card Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <!-- Product Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-10">
             @foreach($products as $product)
-                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col hover:shadow-md transition duration-300">
-                    <!-- Product Image -->
-                    <div class="h-48 bg-gray-100 w-full relative">
+                <div class="group flex flex-col">
+                    <!-- Image Area -->
+                    <div class="bg-gray-200 aspect-[4/3] w-full rounded-md flex flex-col items-center justify-center mb-4 relative overflow-hidden">
                         @if($product->image)
-                            <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
+                            <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                         @else
-                            <div class="flex items-center justify-center w-full h-full text-gray-400 text-sm">Tanpa Gambar</div>
+                            <i class="fa-regular fa-image text-gray-400 text-4xl mb-2"></i>
+                            <span class="text-gray-400 text-xs tracking-widest uppercase">Image</span>
                         @endif
                         
                         <!-- Stock Badge -->
-                        <div class="absolute top-2 right-2 px-2 py-1 text-xs font-bold rounded-md shadow-sm {{ $product->stock > 0 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }}">
-                            Stok: {{ $product->stock }}
-                        </div>
-                    </div>
-
-                    <!-- Product Info -->
-                    <div class="p-5 flex-grow flex flex-col">
-                        <h2 class="text-lg font-bold text-gray-800 line-clamp-1 mb-1">{{ $product->name }}</h2>
-                        <p class="text-blue-600 font-black text-xl mb-3">Rp {{ number_format($product->price, 0, ',', '.') }}</p>
-                        <p class="text-gray-500 text-sm line-clamp-2 flex-grow">{{ $product->description }}</p>
-                    </div>
-
-                    <!-- Actions -->
-                    <div class="p-4 border-t bg-gray-50 flex justify-between gap-2">
-                        <a href="{{ route('products.show', $product->id) }}" class="text-center text-sm font-medium text-blue-600 bg-blue-50 px-4 py-2 rounded border border-blue-100 hover:bg-blue-100 transition truncate">Detail</a>
-                        
                         @if(auth()->check() && auth()->user()->role === 'admin')
-                            <a href="{{ route('products.edit', $product->id) }}" class="text-center text-sm font-medium text-yellow-600 bg-yellow-50 px-4 py-2 rounded border border-yellow-100 hover:bg-yellow-100 transition truncate">Edit</a>
-                            <form action="{{ route('products.destroy', $product->id) }}" method="POST">
-                                @csrf @method('DELETE')
-                                <button type="submit" class="w-full text-center text-sm font-medium text-red-600 bg-red-50 px-4 py-2 rounded border border-red-100 hover:bg-red-100 transition truncate" onclick="return confirm('Hapus produk ini?')">Hapus</button>
-                            </form>
-                        @elseif(auth()->check() && auth()->user()->role === 'user')
-                            <form action="{{ route('cart.add', $product->id) }}" method="POST" class="flex-grow">
-                                @csrf
-                                <button type="submit" class="w-full text-center text-sm font-medium text-white bg-green-600 px-4 py-2 rounded hover:bg-green-700 transition shadow-sm truncate">Masukkan Keranjang</button>
-                            </form>
+                            <div class="absolute top-2 right-2 px-2 py-1 text-xs font-bold rounded shadow {{ $product->stock > 0 ? 'bg-green-500 text-white' : 'bg-red-500 text-white' }}">
+                                Stok: {{ $product->stock }}
+                            </div>
                         @endif
+                    </div>
+
+                    <!-- Product Details -->
+                    <div class="flex-grow flex flex-col">
+                        <h3 class="text-sm font-bold text-gray-900 mb-1 truncate">{{ $product->name }}</h3>
+                        <p class="text-sm font-bold text-gray-900 mb-4">Rp {{ number_format($product->price, 0, ',', '.') }}</p>
+                        
+                        <div class="mt-auto space-y-2">
+                            <a href="{{ route('products.show', $product->id) }}" class="block w-full text-center py-2 border border-gray-400 text-gray-800 text-xs font-bold hover:bg-green-600 hover:text-white hover:border-green-600 transition-colors uppercase">
+                                Lihat Detail
+                            </a>
+                            
+                            @if(auth()->check() && auth()->user()->role === 'admin')
+                                <div class="flex gap-2">
+                                    <a href="{{ route('products.edit', $product->id) }}" class="flex-1 text-center py-1.5 border border-yellow-500 text-yellow-600 text-xs font-bold hover:bg-yellow-500 hover:text-white transition-colors uppercase">Edit</a>
+                                    <form action="{{ route('products.destroy', $product->id) }}" method="POST" class="flex-1">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" class="w-full text-center py-1.5 border border-red-500 text-red-600 text-xs font-bold hover:bg-red-500 hover:text-white transition-colors uppercase" onclick="return confirm('Hapus produk ini?')">Hapus</button>
+                                    </form>
+                                </div>
+                            @elseif(auth()->check() && auth()->user()->role === 'user')
+                                <form action="{{ route('cart.add', $product->id) }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="w-full text-center py-2 bg-green-600 text-white text-xs font-bold hover:bg-green-700 transition-colors uppercase">
+                                        + Keranjang
+                                    </button>
+                                </form>
+                            @endif
+                        </div>
                     </div>
                 </div>
             @endforeach
         </div>
-    </div>
+        
+    </main>
 </body>
 </html>

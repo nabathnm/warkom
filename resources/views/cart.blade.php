@@ -11,7 +11,10 @@
         <!-- Header -->
         <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
             <h1 class="text-2xl font-bold border-b-2 border-blue-600 pb-1">🛒 Keranjang Belanja Anda</h1>
-            <a href="{{ route('products.index') }}" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 font-medium transition shadow-sm">Lanjut Belanja</a>
+            <div class="flex gap-2">
+                <a href="{{ route('orders.index') }}" class="bg-gray-100 text-gray-700 border border-gray-200 px-4 py-2 rounded-lg hover:bg-gray-200 font-medium transition shadow-sm flex items-center">📦 Riwayat Pesanan</a>
+                <a href="{{ route('products.index') }}" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 font-medium transition shadow-sm">Lanjut Belanja</a>
+            </div>
         </div>
 
         @if(session('success'))
@@ -75,7 +78,7 @@
                             <span class="text-gray-600">Total Harga</span>
                             <span class="text-2xl font-black text-blue-600">Rp {{ number_format($grandTotal, 0, ',', '.') }}</span>
                         </div>
-                        <button class="w-full bg-green-600 text-white font-bold py-3 rounded-lg shadow hover:bg-green-700 transition" onclick="alert('Fitur Pembayaran belum tersedia (Simulasi UI).')">Lanjut ke Pembayaran</button>
+                        <a href="{{ route('checkout') }}" class="block w-full text-center bg-green-600 text-white font-bold py-3 rounded-lg shadow hover:bg-green-700 transition">Lanjut ke Pembayaran</a>
                     </div>
                 </div>
             </div>

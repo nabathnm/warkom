@@ -39,6 +39,21 @@
                 <input type="text" name="name" value="{{ old('name', $product->name) }}" class="w-full border rounded-lg p-2 outline-blue-500" required>
             </div>
             <div>
+                <label class="block font-medium mb-1">Kategori</label>
+                <select name="category" class="w-full border rounded-lg p-2 outline-blue-500 bg-white" required>
+                    <option value="" disabled>Pilih Kategori...</option>
+                    <option value="cpu" {{ $product->category == 'cpu' ? 'selected' : '' }}>CPU / Prosesor</option>
+                    <option value="motherboard" {{ $product->category == 'motherboard' ? 'selected' : '' }}>Motherboard</option>
+                    <option value="vga" {{ $product->category == 'vga' ? 'selected' : '' }}>VGA / Kartu Grafis</option>
+                    <option value="ram" {{ $product->category == 'ram' ? 'selected' : '' }}>RAM / Memori</option>
+                    <option value="storage" {{ $product->category == 'storage' ? 'selected' : '' }}>Penyimpanan (HDD/SSD)</option>
+                    <option value="psu" {{ $product->category == 'psu' ? 'selected' : '' }}>Power Supply (PSU)</option>
+                    <option value="casing" {{ $product->category == 'casing' ? 'selected' : '' }}>Casing</option>
+                    <option value="cooling" {{ $product->category == 'cooling' ? 'selected' : '' }}>Pendingin / Cooling</option>
+                    <option value="aksesoris" {{ $product->category == 'aksesoris' ? 'selected' : '' }}>Aksesoris</option>
+                </select>
+            </div>
+            <div>
                 <label class="block font-medium mb-1">Deskripsi</label>
                 <textarea name="description" class="w-full border rounded-lg p-2 outline-blue-500" rows="3" required>{{ old('description', $product->description) }}</textarea>
             </div>

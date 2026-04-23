@@ -28,6 +28,7 @@ class ProductController extends Controller
 
         $request->validate([
             'name' => 'required',
+            'category' => 'required|in:cpu,motherboard,vga,ram,storage,psu,casing,cooling,aksesoris',
             'description' => 'required',
             'price' => 'required|numeric',
             'stock' => 'required|integer',
@@ -51,7 +52,20 @@ class ProductController extends Controller
 
     public function show(Product $product)
     {
-        return view('show', compact('product'));
+        $hasBought = false;
+        $hasReviewed = false;
+
+        if (auth()->check()) {
+            $hasBought = auth()->user()->orders()->whereHas('items', function($q) use ($product) {
+                $q->where('product_id', $product->id);
+            })->exists();
+
+            $hasReviewed = $product->reviews()->where('user_id', auth()->id())->exists();
+        }
+
+        $product->load('reviews.user');
+        
+        return view('show', compact('product', 'hasBought', 'hasReviewed'));
     }
 
     public function edit(Product $product)
@@ -66,6 +80,7 @@ class ProductController extends Controller
 
         $request->validate([
             'name' => 'required',
+            'category' => 'required|in:cpu,motherboard,vga,ram,storage,psu,casing,cooling,aksesoris',
             'description' => 'required',
             'price' => 'required|numeric',
             'stock' => 'required|integer',
