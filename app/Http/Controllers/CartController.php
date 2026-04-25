@@ -27,13 +27,28 @@ class CartController extends Controller
                     ->where('product_id', $product->id)
                     ->first();
 
+        $qtyToAdd = (int) $request->input('quantity', 1);
+        if ($qtyToAdd < 1) $qtyToAdd = 1;
+
         if ($cart) {
-            $cart->increment('quantity');
+            // Cek apakah total kuantitas melebihi stok
+            if ($cart->quantity + $qtyToAdd > $product->stock) {
+                $qtyToAdd = $product->stock - $cart->quantity;
+            }
+            if ($qtyToAdd > 0) {
+                $cart->increment('quantity', $qtyToAdd);
+            } else {
+                return redirect()->route('cart.index')->with('error', 'Jumlah produk di keranjang sudah mencapai batas maksimum stok.');
+            }
         } else {
+            // Cek jika kuantitas melebihi stok
+            if ($qtyToAdd > $product->stock) {
+                $qtyToAdd = $product->stock;
+            }
             Cart::create([
                 'user_id' => Auth::id(),
                 'product_id' => $product->id,
-                'quantity' => 1
+                'quantity' => $qtyToAdd
             ]);
         }
 

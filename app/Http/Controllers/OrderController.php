@@ -17,12 +17,18 @@ class OrderController extends Controller
         return view('orders', compact('orders'));
     }
 
-    public function checkout()
+    public function checkout(Request $request)
     {
-        $carts = Cart::where('user_id', Auth::id())->with('product')->get();
+        $selectedIds = $request->input('selected', []);
+        
+        if (empty($selectedIds)) {
+            $carts = collect(); // If nothing selected, empty collection
+        } else {
+            $carts = Cart::where('user_id', Auth::id())->whereIn('id', $selectedIds)->with('product')->get();
+        }
         
         if ($carts->isEmpty()) {
-            return redirect()->route('products.index')->with('error', 'Keranjang belanja Anda kosong.');
+            return redirect()->route('cart.index')->with('error', 'Pilih minimal satu produk untuk di-checkout.');
         }
 
         return view('checkout', compact('carts'));
@@ -32,24 +38,30 @@ class OrderController extends Controller
     {
         $request->validate([
             'address' => 'required|string|max:1000',
+            'selected' => 'required|array',
+            'selected.*' => 'exists:carts,id'
         ]);
 
-        $carts = Cart::where('user_id', Auth::id())->with('product')->get();
+        $carts = Cart::where('user_id', Auth::id())->whereIn('id', $request->selected)->with('product')->get();
         
         if ($carts->isEmpty()) {
-            return redirect()->route('products.index')->with('error', 'Keranjang belanja Anda kosong.');
+            return redirect()->route('cart.index')->with('error', 'Produk yang dipilih tidak valid.');
         }
 
         // Calculate total
-        $totalPrice = 0;
+        $subtotal = 0;
         foreach ($carts as $cart) {
-            $totalPrice += $cart->product->price * $cart->quantity;
+            $subtotal += $cart->product->price * $cart->quantity;
             
             // Check stock again
             if ($cart->product->stock < $cart->quantity) {
                 return redirect()->route('cart.index')->with('error', 'Stok produk ' . $cart->product->name . ' tidak mencukupi.');
             }
         }
+
+        $ongkir = 15000;
+        $ppn = $subtotal * 0.01;
+        $totalPrice = $subtotal + $ongkir + $ppn;
 
         // Create Order
         $order = Order::create([
@@ -71,8 +83,8 @@ class OrderController extends Controller
             $cart->product->decrement('stock', $cart->quantity);
         }
 
-        // Clear Cart
-        Cart::where('user_id', Auth::id())->delete();
+        // Clear processed Carts
+        Cart::where('user_id', Auth::id())->whereIn('id', $request->selected)->delete();
 
         return redirect()->route('checkout.success');
     }
