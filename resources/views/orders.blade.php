@@ -40,16 +40,16 @@
                 <div class="flex items-center gap-6">
                     <div class="flex items-center gap-4 text-black text-sm">
                         @if(auth()->check() && auth()->user()->role === 'user')
-                            <a href="{{ route('orders.index') }}" class="hover:text-green-600 transition" title="Riwayat Pesanan">
-                                <i class="fa-regular fa-rectangle-list"></i>
+                            <a href="{{ route('orders.index') }}" class="hover:opacity-80 transition" title="Riwayat Pesanan">
+                                <img src="{{ asset('purchase_order.png') }}" alt="Riwayat Pesanan" class="w-[20px] h-[20px] object-contain">
                             </a>
                             <a href="{{ route('cart.index') }}" class="hover:text-green-600 transition" title="Keranjang">
                                 <i class="fa-solid fa-cart-shopping"></i>
                             </a>
                         @endif
                         @if(auth()->check() && auth()->user()->role === 'admin')
-                            <a href="{{ route('products.create') }}" class="hover:text-green-600 transition" title="Tambah Produk">
-                                <i class="fa-solid fa-plus-square"></i>
+                            <a href="{{ route('products.create') }}" class="hover:opacity-80 transition" title="Tambah Produk">
+                                <img src="{{ asset('add_new_product.png') }}" alt="Tambah Produk" class="w-[20px] h-[20px] object-contain">
                             </a>
                         @endif
                     </div>

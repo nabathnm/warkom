@@ -37,16 +37,16 @@
                 <div class="flex items-center gap-6">
                     <div class="flex items-center gap-4 text-black text-sm">
                         @if(auth()->check() && auth()->user()->role === 'user')
-                            <a href="{{ route('orders.index') }}" class="hover:text-green-600 transition" title="Riwayat Pesanan">
-                                <i class="fa-regular fa-rectangle-list"></i>
+                            <a href="{{ route('orders.index') }}" class="hover:opacity-80 transition" title="Riwayat Pesanan">
+                                <img src="{{ asset('purchase_order.png') }}" alt="Riwayat Pesanan" class="w-[20px] h-[20px] object-contain">
                             </a>
                             <a href="{{ route('cart.index') }}" class="hover:text-green-600 transition" title="Keranjang">
                                 <i class="fa-solid fa-cart-shopping"></i>
                             </a>
                         @endif
                         @if(auth()->check() && auth()->user()->role === 'admin')
-                            <a href="{{ route('products.create') }}" class="hover:text-green-600 transition" title="Tambah Produk">
-                                <i class="fa-solid fa-plus-square"></i>
+                            <a href="{{ route('products.create') }}" class="hover:opacity-80 transition" title="Tambah Produk">
+                                <img src="{{ asset('add_new_product.png') }}" alt="Tambah Produk" class="w-[20px] h-[20px] object-contain">
                             </a>
                         @endif
                     </div>
@@ -78,13 +78,44 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <div class="bg-gray-300 w-full h-[400px] flex flex-col justify-center items-center relative mb-12">
-        <h1 class="text-6xl md:text-8xl font-bold tracking-widest text-black mb-8">BEST PRODUK</h1>
-        <div class="absolute bottom-6 flex gap-2">
-            <div class="w-3 h-3 rounded-full bg-black"></div>
-            <div class="w-3 h-3 rounded-full bg-black"></div>
-            <div class="w-3 h-3 rounded-full bg-black"></div>
+    <!-- Hero Section Carousel -->
+    <div class="w-full h-[400px] relative mb-12 overflow-hidden group bg-black" id="hero-carousel">
+        <!-- Slides -->
+        <div class="carousel-slide absolute inset-0 transition-opacity duration-1000 opacity-100 z-10">
+            <img src="{{ asset('carousel_1.png') }}" class="w-full h-full object-cover object-center opacity-70" alt="Best Product 1">
+            <div class="absolute inset-0 flex flex-col justify-center items-center pointer-events-none">
+                <h1 class="text-5xl md:text-7xl font-bold tracking-widest text-white mb-6 drop-shadow-[0_4px_4px_rgba(0,0,0,0.8)]">BEST PRODUK</h1>
+                <p class="text-white text-lg md:text-xl font-medium tracking-widest drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] uppercase">Gaming & Performa Tinggi</p>
+            </div>
+        </div>
+        <div class="carousel-slide absolute inset-0 transition-opacity duration-1000 opacity-0 z-0">
+            <img src="{{ asset('carousel_2.png') }}" class="w-full h-full object-cover object-center opacity-70" alt="Best Product 2">
+            <div class="absolute inset-0 flex flex-col justify-center items-center pointer-events-none">
+                <h1 class="text-5xl md:text-7xl font-bold tracking-widest text-white mb-6 drop-shadow-[0_4px_4px_rgba(0,0,0,0.8)]">NEW ARRIVAL</h1>
+                <p class="text-white text-lg md:text-xl font-medium tracking-widest drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] uppercase">Komponen PC Generasi Terbaru</p>
+            </div>
+        </div>
+        <div class="carousel-slide absolute inset-0 transition-opacity duration-1000 opacity-0 z-0">
+            <img src="{{ asset('carousel_3.png') }}" class="w-full h-full object-cover object-center opacity-70" alt="Best Product 3">
+            <div class="absolute inset-0 flex flex-col justify-center items-center pointer-events-none">
+                <h1 class="text-5xl md:text-7xl font-bold tracking-widest text-white mb-6 drop-shadow-[0_4px_4px_rgba(0,0,0,0.8)]">PRO SETUP</h1>
+                <p class="text-white text-lg md:text-xl font-medium tracking-widest drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] uppercase">Tingkatkan Produktivitas Anda</p>
+            </div>
+        </div>
+
+        <!-- Navigation Arrows -->
+        <button class="absolute left-4 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/60 text-white w-12 h-12 rounded-full flex items-center justify-center backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all z-20" onclick="prevSlide()">
+            <i class="fa-solid fa-chevron-left text-xl"></i>
+        </button>
+        <button class="absolute right-4 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/60 text-white w-12 h-12 rounded-full flex items-center justify-center backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all z-20" onclick="nextSlide()">
+            <i class="fa-solid fa-chevron-right text-xl"></i>
+        </button>
+
+        <!-- Indicators -->
+        <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-3 z-20">
+            <button class="carousel-indicator w-3 h-3 rounded-full bg-white transition-colors" onclick="goToSlide(0)"></button>
+            <button class="carousel-indicator w-3 h-3 rounded-full bg-white/40 hover:bg-white transition-colors" onclick="goToSlide(1)"></button>
+            <button class="carousel-indicator w-3 h-3 rounded-full bg-white/40 hover:bg-white transition-colors" onclick="goToSlide(2)"></button>
         </div>
     </div>
 
@@ -240,6 +271,51 @@
                 closeDeleteModal();
             }
         });
+
+        // Carousel Logic
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.carousel-slide');
+        const indicators = document.querySelectorAll('.carousel-indicator');
+        let slideInterval;
+
+        function updateSlide(index) {
+            slides[currentSlide].classList.remove('opacity-100', 'z-10');
+            slides[currentSlide].classList.add('opacity-0', 'z-0');
+            indicators[currentSlide].classList.remove('bg-white');
+            indicators[currentSlide].classList.add('bg-white/40');
+            
+            currentSlide = index;
+            
+            slides[currentSlide].classList.remove('opacity-0', 'z-0');
+            slides[currentSlide].classList.add('opacity-100', 'z-10');
+            indicators[currentSlide].classList.remove('bg-white/40');
+            indicators[currentSlide].classList.add('bg-white');
+        }
+
+        function nextSlide() {
+            let next = (currentSlide + 1) % slides.length;
+            updateSlide(next);
+            resetInterval();
+        }
+
+        function prevSlide() {
+            let prev = (currentSlide - 1 + slides.length) % slides.length;
+            updateSlide(prev);
+            resetInterval();
+        }
+
+        function goToSlide(index) {
+            updateSlide(index);
+            resetInterval();
+        }
+
+        function resetInterval() {
+            clearInterval(slideInterval);
+            slideInterval = setInterval(nextSlide, 5000);
+        }
+
+        // Start auto slide
+        slideInterval = setInterval(nextSlide, 5000);
     </script>
 </body>
 </html>

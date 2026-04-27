@@ -37,8 +37,8 @@
                 <div class="flex items-center gap-6">
                     <div class="flex items-center gap-4 text-black text-sm">
                         @if(auth()->check() && auth()->user()->role === 'user')
-                            <a href="{{ route('orders.index') }}" class="hover:text-green-600 transition" title="Riwayat Pesanan">
-                                <i class="fa-regular fa-rectangle-list"></i>
+                            <a href="{{ route('orders.index') }}" class="hover:opacity-80 transition" title="Riwayat Pesanan">
+                                <img src="{{ asset('purchase_order.png') }}" alt="Riwayat Pesanan" class="w-[20px] h-[20px] object-contain">
                             </a>
                             <a href="{{ route('cart.index') }}" class="hover:text-green-600 transition" title="Keranjang">
                                 <i class="fa-solid fa-cart-shopping"></i>
@@ -46,7 +46,7 @@
                         @endif
                         @if(auth()->check() && auth()->user()->role === 'admin')
                             <a href="{{ route('products.create') }}" class="hover:text-green-600 transition" title="Tambah Produk">
-                                <i class="fa-solid fa-plus-square"></i>
+                                <img src="{{ asset('add_new_product.png') }}" alt="Tambah Produk" class="w-[20px] h-[20px] object-contain">
                             </a>
                         @endif
                     </div>
@@ -75,7 +75,7 @@
             <div class="flex items-center text-xs text-gray-500 font-medium">
                 <a href="{{ route('products.index') }}" class="hover:text-black">Home</a>
                 <span class="mx-3">/</span>
-                <span class="text-black">Detail Produk</span>
+                <span class="text-black text-gray-800">Detail Produk</span>
             </div>
         </div>
     </nav>
@@ -251,15 +251,17 @@
                 </script>
 
                 @if(auth()->check() && auth()->user()->role === 'admin')
-                    <a href="{{ route('products.edit', $product->id) }}" class="w-full bg-yellow-500 text-white py-3.5 rounded-[4px] text-sm font-medium hover:bg-yellow-600 transition text-center mb-3">
-                        Edit Produk
-                    </a>
-                    <form action="{{ route('products.destroy', $product->id) }}" method="POST" class="w-full">
-                        @csrf @method('DELETE')
-                        <button type="submit" class="w-full bg-red-500 text-white py-3.5 rounded-[4px] text-sm font-medium hover:bg-red-600 transition" onclick="return confirm('Hapus produk ini?')">
-                            Hapus Produk
-                        </button>
-                    </form>
+                    <div class="flex flex-col gap-3 mt-4">
+                        <a href="{{ route('products.edit', $product->id) }}" class="block w-full text-center py-3.5 border border-yellow-500 text-yellow-600 text-sm font-mono font-bold hover:bg-yellow-500 hover:text-white transition-colors uppercase">
+                            Edit Produk
+                        </a>
+                        <form action="{{ route('products.destroy', $product->id) }}" method="POST" class="w-full">
+                            @csrf @method('DELETE')
+                            <button type="submit" class="w-full text-center py-3.5 border border-red-500 text-red-600 text-sm font-mono font-bold hover:bg-red-500 hover:text-white transition-colors uppercase" onclick="return confirm('Hapus produk ini?')">
+                                Hapus Produk
+                            </button>
+                        </form>
+                    </div>
                 @elseif(auth()->check() && auth()->user()->role === 'user')
                     @if($product->stock > 0)
                         <form action="{{ route('cart.add', $product->id) }}" method="POST" class="w-full">

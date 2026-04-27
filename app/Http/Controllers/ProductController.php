@@ -33,7 +33,9 @@ class ProductController extends Controller
             'price' => 'required|numeric',
             'stock' => 'required|integer',
             'images' => 'nullable|array',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048'
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:10240'
+        ], [
+            'images.*.max' => 'Ukuran gambar melebihi batas (10MB)',
         ]);
 
         $data = $request->all();
@@ -96,7 +98,9 @@ class ProductController extends Controller
             'price' => 'required|numeric',
             'stock' => 'required|integer',
             'images' => 'nullable|array',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048'
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:10240'
+        ], [
+            'images.*.max' => 'Ukuran gambar melebihi batas (10MB)',
         ]);
 
         $data = $request->all();
