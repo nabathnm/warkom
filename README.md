@@ -111,6 +111,34 @@ Setelah Anda menjalankan perintah seeding di langkah nomor 6, sistem otomatis me
 
 Aplikasi Warkom memiliki serangkaian pengujian otomatis untuk menjamin kualitas perangkat lunak. Pengujian ini terbagi menjadi dua, yaitu *Whitebox Testing* (menguji logika internal) dan *Blackbox Testing* (menguji fungsionalitas UI/alur pengguna).
 
+### Persiapan Awal Khusus Blackbox Testing (Hanya Sekali)
+Jika Anda menjalankan proyek ini di laptop baru (setelah melakukan `clone`), Anda harus mempersiapkan lingkungan Laravel Dusk terlebih dahulu:
+
+1. **Install ChromeDriver**:
+   Jalankan perintah berikut agar Dusk dapat mengontrol browser Chrome saat pengujian:
+   ```bash
+   php artisan dusk:chrome-driver
+   ```
+
+2. **Siapkan Environment Dusk**:
+   Buat salinan file environment khusus untuk Dusk agar pengujian tidak menghapus data utama Anda:
+   ```bash
+   cp .env .env.dusk.local
+   ```
+   Buka file `.env.dusk.local`, lalu ubah pengaturan URL dan *database* menjadi SQLite:
+   ```env
+   APP_URL=http://127.0.0.1:8000
+   DB_CONNECTION=sqlite
+   DB_DATABASE=database/dusk.sqlite
+   ```
+
+3. **Buat File Database Kosong**:
+   Buat file database SQLite baru untuk digunakan oleh Dusk:
+   ```bash
+   touch database/dusk.sqlite
+   ```
+   *(Untuk pengguna Windows Command Prompt, gunakan perintah: `type nul > database\dusk.sqlite`)*
+
 ### 1. Whitebox Testing (PHPUnit)
 Pengujian ini memverifikasi fungsionalitas logika di level aplikasi, seperti controller, model, dan interaksi dengan database.
 
