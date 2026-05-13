@@ -104,3 +104,36 @@ Setelah Anda menjalankan perintah seeding di langkah nomor 6, sistem otomatis me
 - **Email:** `andi@gmail.com`
 - **Password:** `123456`
 - **Role:** Melihat produk, belanja, dan memberikan review/komentar.
+
+---
+
+## Panduan Pengujian (Testing)
+
+Aplikasi Warkom memiliki serangkaian pengujian otomatis untuk menjamin kualitas perangkat lunak. Pengujian ini terbagi menjadi dua, yaitu *Whitebox Testing* (menguji logika internal) dan *Blackbox Testing* (menguji fungsionalitas UI/alur pengguna).
+
+### 1. Whitebox Testing (PHPUnit)
+Pengujian ini memverifikasi fungsionalitas logika di level aplikasi, seperti controller, model, dan interaksi dengan database.
+
+Untuk menjalankan Whitebox Testing, jalankan perintah berikut di terminal:
+```bash
+php artisan test
+```
+Perintah ini akan menjalankan seluruh *Feature Test* dan *Unit Test* yang ada di dalam direktori `tests/Feature` dan `tests/Unit`.
+
+### 2. Blackbox Testing (Laravel Dusk)
+Pengujian ini dilakukan secara *End-to-End* (E2E) yang mensimulasikan interaksi nyata pengguna pada browser (seperti klik tombol, mengisi form, dan navigasi).
+
+Untuk menjalankan Blackbox Testing, Anda memerlukan dua terminal:
+
+**Langkah 1 (Terminal 1 - Menjalankan Server Testing):**
+Laravel Dusk membutuhkan *web server* yang aktif. Karena pengujian akan me-reset *database*, sangat disarankan menggunakan environment khusus (`dusk.local`) agar tidak menghapus data pengembangan Anda.
+```bash
+php artisan serve --env=dusk.local
+```
+
+**Langkah 2 (Terminal 2 - Menjalankan Pengujian Dusk):**
+Setelah server berjalan, buka tab/terminal baru dan jalankan:
+```bash
+php artisan dusk
+```
+Perintah ini akan membuka *browser headless* secara otomatis dan memvalidasi elemen antarmuka pengguna sesuai dengan skenario *test suite* yang berada di direktori `tests/Browser`. Hasil tangkapan layar (screenshot) untuk pengujian yang gagal akan disimpan otomatis di direktori `tests/Browser/screenshots/`.

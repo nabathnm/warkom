@@ -33,7 +33,7 @@ class AuthTest extends TestCase
 
     public function test_user_yang_sudah_login_diredirect_dari_halaman_register(): void
     {
-        $user = User::factory()->create(['role' => 'user']);
+        $user = User::factory()->create();
         $response = $this->actingAs($user)->get(route('register'));
         // Guest middleware redirect ke '/', lalu root chain ke products
         $response->assertRedirect('/');
@@ -47,35 +47,16 @@ class AuthTest extends TestCase
             'email' => 'testuser@example.com',
             'password' => 'password123',
             'password_confirmation' => 'password123',
-            'role' => 'user',
         ]);
 
         $response->assertRedirect(route('products.index'));
         $this->assertDatabaseHas('users', [
             'email' => 'testuser@example.com',
             'name' => 'Test User',
-            'role' => 'user',
         ]);
         $this->assertAuthenticated();
     }
 
-    /** @test */
-    public function test_register_berhasil_sebagai_admin(): void
-    {
-        $response = $this->post(route('register.submit'), [
-            'name' => 'Admin User',
-            'email' => 'admin@example.com',
-            'password' => 'password123',
-            'password_confirmation' => 'password123',
-            'role' => 'admin',
-        ]);
-
-        $response->assertRedirect(route('products.index'));
-        $this->assertDatabaseHas('users', [
-            'email' => 'admin@example.com',
-            'role' => 'admin',
-        ]);
-    }
 
     /** @test */
     public function test_register_gagal_tanpa_nama(): void
@@ -84,7 +65,6 @@ class AuthTest extends TestCase
             'email' => 'test@example.com',
             'password' => 'password123',
             'password_confirmation' => 'password123',
-            'role' => 'user',
         ]);
 
         $response->assertSessionHasErrors('name');
@@ -98,7 +78,6 @@ class AuthTest extends TestCase
             'name' => 'Test',
             'password' => 'password123',
             'password_confirmation' => 'password123',
-            'role' => 'user',
         ]);
 
         $response->assertSessionHasErrors('email');
@@ -107,14 +86,13 @@ class AuthTest extends TestCase
     /** @test */
     public function test_register_gagal_dengan_email_duplikat(): void
     {
-        User::factory()->create(['email' => 'existing@example.com', 'role' => 'user']);
+        User::factory()->create(['email' => 'existing@example.com']);
 
         $response = $this->post(route('register.submit'), [
             'name' => 'Test',
             'email' => 'existing@example.com',
             'password' => 'password123',
             'password_confirmation' => 'password123',
-            'role' => 'user',
         ]);
 
         $response->assertSessionHasErrors('email');
@@ -128,7 +106,6 @@ class AuthTest extends TestCase
             'email' => 'test@example.com',
             'password' => '12345',
             'password_confirmation' => '12345',
-            'role' => 'user',
         ]);
 
         $response->assertSessionHasErrors('password');
@@ -142,25 +119,11 @@ class AuthTest extends TestCase
             'email' => 'test@example.com',
             'password' => 'password123',
             'password_confirmation' => 'differentpassword',
-            'role' => 'user',
         ]);
 
         $response->assertSessionHasErrors('password');
     }
 
-    /** @test */
-    public function test_register_gagal_role_tidak_valid(): void
-    {
-        $response = $this->post(route('register.submit'), [
-            'name' => 'Test',
-            'email' => 'test@example.com',
-            'password' => 'password123',
-            'password_confirmation' => 'password123',
-            'role' => 'superadmin',
-        ]);
-
-        $response->assertSessionHasErrors('role');
-    }
 
     // ============================================================
     // LOGIN TESTS
@@ -176,7 +139,7 @@ class AuthTest extends TestCase
 
     public function test_user_yang_sudah_login_diredirect_dari_halaman_login(): void
     {
-        $user = User::factory()->create(['role' => 'user']);
+        $user = User::factory()->create();
         $response = $this->actingAs($user)->get(route('login'));
         // Guest middleware redirect ke '/'
         $response->assertRedirect('/');
@@ -188,7 +151,6 @@ class AuthTest extends TestCase
         $user = User::factory()->create([
             'email' => 'user@example.com',
             'password' => bcrypt('password123'),
-            'role' => 'user',
         ]);
 
         $response = $this->post(route('login.submit'), [
@@ -206,7 +168,6 @@ class AuthTest extends TestCase
         User::factory()->create([
             'email' => 'user@example.com',
             'password' => bcrypt('password123'),
-            'role' => 'user',
         ]);
 
         $response = $this->post(route('login.submit'), [
@@ -268,7 +229,7 @@ class AuthTest extends TestCase
     /** @test */
     public function test_logout_berhasil(): void
     {
-        $user = User::factory()->create(['role' => 'user']);
+        $user = User::factory()->create();
         
         $response = $this->actingAs($user)->post(route('logout'));
 
@@ -290,7 +251,7 @@ class AuthTest extends TestCase
     /** @test */
     public function test_root_redirect_ke_products_jika_authenticated(): void
     {
-        $user = User::factory()->create(['role' => 'user']);
+        $user = User::factory()->create();
         $response = $this->actingAs($user)->get('/');
         $response->assertRedirect(route('products.index'));
     }

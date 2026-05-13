@@ -64,8 +64,16 @@ class ProductSeeder extends Seeder
             'vga' => 'products/vga_mockup_1776924699579.png'
         ];
 
+        $specificImageMap = [
+            'Intel Core i5-12400F' => 'products/KbwNTA6stn12DCXtPM8aHwmlk4bKFolD3hyHvCa7.jpg',
+            'AMD Ryzen 5 5600X' => 'products/4qbZVzOyk9FasDYt1arcBkgEXMS9BUZUqBQZ7DFt.jpg',
+            'Intel Core i7-13700K' => 'products/M0nJOuN6zOzlXnAOboVtZ8gTpGs4BcnQA35m1Jtz.jpg',
+        ];
+
         foreach ($products as $product) {
-            if (isset($imageMap[$product['category']])) {
+            if (isset($specificImageMap[$product['name']])) {
+                $product['images'] = [$specificImageMap[$product['name']]];
+            } elseif (isset($imageMap[$product['category']])) {
                 // Menambahkan gambar dalam bentuk array (mendukung banyak gambar)
                 $product['images'] = [$imageMap[$product['category']]];
             }
